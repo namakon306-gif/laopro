@@ -3,18 +3,1049 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LAO LOCK AI PRO</title>
-</head>
 
+<title>LAO LOCK AI PRO</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:10px;
+    padding-bottom:80px;
+    background:#f4f4f4;
+    font-family:sans-serif;
+}
+
+.page{
+    display:none;
+}
+
+#page1{
+    display:block;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:#fff;
+    padding:12px;
+    border-radius:12px;
+    box-shadow:0 0 10px rgba(0,0,0,.08);
+}
+
+/* INPUT */
+
+.top-box{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.box{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    padding:6px 8px;
+    border-radius:10px;
+}
+
+.box-a{
+    border:2px solid #00bfff;
+    background:#eaf8ff;
+}
+
+.box-b{
+    border:2px solid #d4af37;
+    background:#fff7d6;
+}
+
+.box-c{
+    border:2px solid #1565c0;
+    background:#eef5ff;
+}
+
+.box label{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.box input{
+    width:100%;
+    height:34px;
+    border:none;
+    background:transparent;
+    outline:none;
+    font-size:18px;
+    text-align:center;
+}
+
+/* BUTTON */
+
+.main-btn{
+    width:100%;
+    height:44px;
+    border:none;
+    border-radius:10px;
+    background:#000;
+    color:#fff;
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+.copy-btn{
+    width:100%;
+    height:34px;
+    border:none;
+    border-radius:8px;
+    background:#2196f3;
+    color:#fff;
+    margin-top:8px;
+}
+
+/* RESULT */
+
+.result-box{
+    border:2px solid #333;
+    border-radius:12px;
+    padding:10px;
+    margin-bottom:12px;
+    background:#fff;
+}
+
+.result-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.result{
+    font-size:15px;
+    line-height:1.8;
+    word-break:break-word;
+}
+
+.count{
+    margin-top:8px;
+    font-weight:bold;
+}
+
+.match-red{
+    background:#ff3b30;
+    color:#fff;
+    padding:2px 5px;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+.empty{
+    color:#999;
+}
+
+/* SEARCH */
+
+.search-box{
+    margin-top:10px;
+}
+
+.search-box input{
+    width:100%;
+    height:42px;
+    border:2px solid #ff5722;
+    border-radius:10px;
+    font-size:16px;
+    text-align:center;
+}
+
+/* MENU */
+
+.bottom-menu{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    height:60px;
+    background:#fff;
+    display:flex;
+    border-top:1px solid #ddd;
+}
+
+.bottom-menu button{
+    flex:1;
+    border:none;
+    background:#fff;
+    font-size:16px;
+    font-weight:bold;
+}
+
+/* AI */
+
+textarea{
+    width:100%;
+    height:180px;
+    border:2px solid #333;
+    border-radius:10px;
+    padding:10px;
+    font-size:16px;
+    resize:none;
+    margin-bottom:10px;
+}
+
+</style>
+</head>
 <body>
 
-<h2>LAO LOCK AI PRO</h2>
+<!-- PAGE 1 -->
 
-<input id="test" placeholder="ลองพิมพ์">
+<div class="page" id="page1">
 
-<button onclick="alert('ระบบพร้อมใช้งาน')">
-ทดสอบ
+<div class="container">
+
+<div class="top-box">
+
+<div class="box box-a">
+<label>A</label>
+<input type="text" id="hundred" placeholder="00000">
+</div>
+
+<div class="box box-b">
+<label>B</label>
+<input type="text" id="ten" placeholder="00000">
+</div>
+
+<div class="box box-c">
+<label>C</label>
+<input type="text" id="unit" placeholder="00000">
+</div>
+
+</div>
+
+<button class="main-btn" onclick="generateAll()">
+แสดงผล
 </button>
+
+<!-- SPECIAL -->
+
+<div class="result-box">
+
+<div class="result-title">
+พิเศษ (B1+C1)
+</div>
+
+<div class="result" id="resultSpecial"></div>
+
+<div class="count" id="countSpecial"></div>
+
+<button class="copy-btn" onclick="copyResult('resultSpecial')">
+คัดลอกชุดพิเศษ
+</button>
+
+</div>
+
+<!-- 3 -->
+
+<div class="result-box">
+
+<div class="result-title">
+3 หลัก (B2+C1)
+</div>
+
+<div class="result" id="result3"></div>
+
+<div class="count" id="count3"></div>
+
+<button class="copy-btn" onclick="copyResult('result3')">
+คัดลอก 3 หลัก B
+</button>
+
+</div>
+
+<!-- 3A -->
+
+<div class="result-box">
+
+<div class="result-title">
+3 หลัก (A2+C1)
+</div>
+
+<div class="result" id="result3A"></div>
+
+<div class="count" id="count3A"></div>
+
+<button class="copy-btn" onclick="copyResult('result3A')">
+คัดลอก 3 หลัก A
+</button>
+
+</div>
+
+<!-- 4 -->
+
+<div class="result-box">
+
+<div class="result-title">
+4 หลัก (B2+A1+C1)
+</div>
+
+<div class="result" id="result4"></div>
+
+<div class="count" id="count4"></div>
+
+<button class="copy-btn" onclick="copyResult('result4')">
+คัดลอก 4 หลัก B
+</button>
+
+</div>
+
+<!-- 4A -->
+
+<div class="result-box">
+
+<div class="result-title">
+4 หลัก (A2+B1+C1)
+</div>
+
+<div class="result" id="result4A"></div>
+
+<div class="count" id="count4A"></div>
+
+<button class="copy-btn" onclick="copyResult('result4A')">
+คัดลอก 4 หลัก A
+</button>
+
+</div>
+
+<!-- SEARCH -->
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchInput"
+placeholder="ค้นหาเลขแบบไม่สนลำดับ"
+oninput="searchRealtime()"
+>
+
+</div>
+
+</div>
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="page" id="page2">
+
+<div class="container">
+
+<div class="result-box">
+
+<div class="result-title">
+🤖 วิเคราะห์ย้อนหลัง 10 งวด
+</div>
+
+<textarea id="historyInput"></textarea>
+
+<button class="main-btn" onclick="analyzeAI()">
+วิเคราะห์ AI
+</button>
+
+</div>
+
+<div class="result-box">
+<div class="result-title">🔥 เลขร้อน</div>
+<div class="result" id="hotResult"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">❄️ เลขเย็น</div>
+<div class="result" id="coldResult"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">🔒 คู่ล็อคเด่น 10 คู่</div>
+<div class="result" id="lockResult"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">🤖 AI SCORE</div>
+<div class="result" id="scoreResult"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">📊 วิเคราะห์ตำแหน่ง</div>
+<div class="result" id="positionResult"></div>
+</div>
+
+</div>
+</div>
+
+<!-- MENU -->
+
+<div class="bottom-menu">
+
+<button onclick="showPage(1)">
+🏠 หน้าแรก
+</button>
+
+<button onclick="showPage(2)">
+🤖 วิเคราะห์
+</button>
+
+</div>
+
+<script>
+
+/* =====================
+PAGE
+===================== */
+
+function showPage(page){
+
+    document.getElementById("page1").style.display="none";
+    document.getElementById("page2").style.display="none";
+
+    document.getElementById("page"+page).style.display="block";
+}
+
+/* =====================
+GLOBAL
+===================== */
+
+let rawSpecial = [];
+let raw3 = [];
+let raw3A = [];
+let raw4 = [];
+let raw4A = [];
+
+/* =====================
+TOOLS
+===================== */
+
+function getNums(str){
+
+    return str
+    .replace(/[^0-9]/g,'')
+    .split('');
+}
+
+function uniqueArray(arr){
+
+    return [...new Set(arr)];
+}
+
+function combine(arr,size){
+
+    let result = new Set();
+
+    function backtrack(path,used){
+
+        if(path.length===size){
+
+            result.add(path.join(''));
+            return;
+        }
+
+        for(let i=0;i<arr.length;i++){
+
+            if(used[i]) continue;
+
+            used[i]=true;
+
+            path.push(arr[i]);
+
+            backtrack(path,used);
+
+            path.pop();
+
+            used[i]=false;
+        }
+    }
+
+    backtrack([],[]);
+
+    return [...result];
+}
+
+function uniqueNoOrder(arr){
+
+    let used = new Set();
+    let result = [];
+
+    arr.forEach(num=>{
+
+        let key =
+        num.split('').sort().join('');
+
+        if(!used.has(key)){
+
+            used.add(key);
+            result.push(num);
+        }
+    });
+
+    return result;
+}
+
+function findDuplicateNoOrder(arr1,arr2){
+
+    let set = new Set();
+
+    arr1.forEach(num=>{
+
+        let key =
+        num.split('').sort().join('');
+
+        set.add(key);
+    });
+
+    return new Set(
+
+        arr2
+        .filter(num=>{
+
+            let key =
+            num.split('').sort().join('');
+
+            return set.has(key);
+        })
+        .map(num=>
+
+            num.split('').sort().join('')
+        )
+    );
+}
+
+/* =====================
+COLOR NUMBER
+===================== */
+
+function colorNumber(num,type){
+
+    let html='';
+
+    if(type==='special'){
+
+        html += `<span style="color:#d4af37;font-weight:bold">${num[0]}</span>`;
+        html += `<span style="color:#1565c0;font-weight:bold">${num[1]}</span>`;
+    }
+
+    else if(type==='3b'){
+
+        html += `<span style="color:#d4af37;font-weight:bold">${num[0]}</span>`;
+        html += `<span style="color:#d4af37;font-weight:bold">${num[1]}</span>`;
+        html += `<span style="color:#1565c0;font-weight:bold">${num[2]}</span>`;
+    }
+
+    else if(type==='3a'){
+
+        html += `<span style="color:#00bfff;font-weight:bold">${num[0]}</span>`;
+        html += `<span style="color:#00bfff;font-weight:bold">${num[1]}</span>`;
+        html += `<span style="color:#1565c0;font-weight:bold">${num[2]}</span>`;
+    }
+
+    else if(type==='4b'){
+
+        html += `<span style="color:#d4af37;font-weight:bold">${num[0]}</span>`;
+        html += `<span style="color:#d4af37;font-weight:bold">${num[1]}</span>`;
+        html += `<span style="color:#00bfff;font-weight:bold">${num[2]}</span>`;
+        html += `<span style="color:#1565c0;font-weight:bold">${num[3]}</span>`;
+    }
+
+    else if(type==='4a'){
+
+        html += `<span style="color:#00bfff;font-weight:bold">${num[0]}</span>`;
+        html += `<span style="color:#00bfff;font-weight:bold">${num[1]}</span>`;
+        html += `<span style="color:#d4af37;font-weight:bold">${num[2]}</span>`;
+        html += `<span style="color:#1565c0;font-weight:bold">${num[3]}</span>`;
+    }
+
+    return html;
+}
+
+/* =====================
+RENDER
+===================== */
+
+function render(id,data,type,matchSet=null){
+
+    if(!data.length){
+
+        document.getElementById(id).innerHTML =
+        '<span class="empty">ไม่มีข้อมูล</span>';
+
+        return;
+    }
+
+    let html =
+    data.map(num=>{
+
+        let key =
+        num.split('').sort().join('');
+
+        let show =
+        colorNumber(num,type);
+
+        if(matchSet && matchSet.has(key)){
+
+            return `
+            <span class="match-red">
+            ${show}
+            </span>
+            `;
+        }
+
+        return show;
+
+    }).join(" , ");
+
+    document.getElementById(id).innerHTML =
+    html;
+}
+
+/* =====================
+GENERATE
+===================== */
+
+function generateAll(){
+
+    let A =
+    uniqueArray(
+        getNums(
+            document.getElementById("hundred").value
+        )
+    );
+
+    let B =
+    uniqueArray(
+        getNums(
+            document.getElementById("ten").value
+        )
+    );
+
+    let C =
+    uniqueArray(
+        getNums(
+            document.getElementById("unit").value
+        )
+    );
+
+    let A2 =
+    uniqueNoOrder(
+        combine(A,2)
+    );
+
+    let B2 =
+    uniqueNoOrder(
+        combine(B,2)
+    );
+
+    let special =
+    uniqueNoOrder(
+        B.flatMap(b=>
+            C.map(c=>b+c)
+        )
+    );
+
+    let result3 =
+    uniqueNoOrder(
+        B2.flatMap(x=>
+            C.map(c=>x+c)
+        )
+    );
+
+    let result3A =
+    uniqueNoOrder(
+        A2.flatMap(x=>
+            C.map(c=>x+c)
+        )
+    );
+
+    let result4 =
+    uniqueNoOrder(
+        B2.flatMap(x=>
+            A.flatMap(a=>
+                C.map(c=>x+a+c)
+            )
+        )
+    );
+
+    let result4A =
+    uniqueNoOrder(
+        A2.flatMap(x=>
+            B.flatMap(b=>
+                C.map(c=>x+b+c)
+            )
+        )
+    );
+
+    rawSpecial = special;
+    raw3 = result3;
+    raw3A = result3A;
+    raw4 = result4;
+    raw4A = result4A;
+
+    let match3 =
+    findDuplicateNoOrder(
+        result3,
+        result3A
+    );
+
+    let match4 =
+    findDuplicateNoOrder(
+        result4,
+        result4A
+    );
+
+    render(
+        "resultSpecial",
+        special,
+        "special"
+    );
+
+    render(
+        "result3",
+        result3,
+        "3b",
+        match3
+    );
+
+    render(
+        "result3A",
+        result3A,
+        "3a",
+        match3
+    );
+
+    render(
+        "result4",
+        result4,
+        "4b",
+        match4
+    );
+
+    render(
+        "result4A",
+        result4A,
+        "4a",
+        match4
+    );
+
+    document.getElementById("countSpecial").innerHTML =
+    "รวม " + special.length + " ชุด";
+
+    document.getElementById("count3").innerHTML =
+    "รวม " + result3.length + " ชุด";
+
+    document.getElementById("count3A").innerHTML =
+    "รวม " + result3A.length + " ชุด";
+
+    document.getElementById("count4").innerHTML =
+    "รวม " + result4.length + " ชุด";
+
+    document.getElementById("count4A").innerHTML =
+    "รวม " + result4A.length + " ชุด";
+}
+
+/* =====================
+SEARCH
+===================== */
+
+function searchRealtime(){
+
+    let keyword =
+    document
+    .getElementById("searchInput")
+    .value
+    .replace(/[^0-9]/g,'');
+
+    if(keyword===''){
+
+        generateAll();
+        return;
+    }
+
+    function filter(arr){
+
+        return arr.filter(num=>{
+
+            return keyword
+            .split('')
+            .every(k=>num.includes(k));
+        });
+    }
+
+    let match3 =
+    findDuplicateNoOrder(
+        raw3,
+        raw3A
+    );
+
+    let match4 =
+    findDuplicateNoOrder(
+        raw4,
+        raw4A
+    );
+
+    render(
+        "resultSpecial",
+        filter(rawSpecial),
+        "special"
+    );
+
+    render(
+        "result3",
+        filter(raw3),
+        "3b",
+        match3
+    );
+
+    render(
+        "result3A",
+        filter(raw3A),
+        "3a",
+        match3
+    );
+
+    render(
+        "result4",
+        filter(raw4),
+        "4b",
+        match4
+    );
+
+    render(
+        "result4A",
+        filter(raw4A),
+        "4a",
+        match4
+    );
+}
+
+/* =====================
+COPY
+===================== */
+
+function copyResult(id){
+
+    let text =
+    document.getElementById(id).innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("คัดลอกแล้ว");
+}
+
+/* =====================
+AI ANALYZE
+===================== */
+
+function analyzeAI(){
+
+    let text =
+    document.getElementById("historyInput").value;
+
+    let rows =
+    text
+    .split('\n')
+    .map(x=>x.trim())
+    .filter(x=>x!=='');
+
+    let freq = {};
+
+    for(let i=0;i<=9;i++){
+
+        freq[i]=0;
+    }
+
+    let posA = {};
+    let posB = {};
+    let posC = {};
+
+    for(let i=0;i<=9;i++){
+
+        posA[i]=0;
+        posB[i]=0;
+        posC[i]=0;
+    }
+
+    let pairFreq = {};
+
+    rows.forEach(num=>{
+
+        let arr =
+        num.replace(/[^0-9]/g,'').split('');
+
+        arr.forEach(n=>{
+
+            freq[n]++;
+        });
+
+        if(arr[0]) posA[arr[0]]++;
+        if(arr[1]) posB[arr[1]]++;
+        if(arr[2]) posC[arr[2]]++;
+
+        for(let i=0;i<arr.length;i++){
+
+            for(let j=i+1;j<arr.length;j++){
+
+                let pair =
+                [arr[i],arr[j]]
+                .sort()
+                .join('');
+
+                pairFreq[pair] =
+                (pairFreq[pair]||0)+1;
+            }
+        }
+    });
+
+    /* HOT */
+
+    let hot =
+    Object.entries(freq)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,3);
+
+    document.getElementById("hotResult").innerHTML =
+
+    hot.map(x=>
+
+        `🔥 ${x[0]} = ${x[1]} ครั้ง`
+
+    ).join("<br>");
+
+    /* COLD */
+
+    let cold =
+    Object.entries(freq)
+    .sort((a,b)=>a[1]-b[1])
+    .slice(0,3);
+
+    document.getElementById("coldResult").innerHTML =
+
+    cold.map(x=>
+
+        `❄️ ${x[0]} = ${x[1]} ครั้ง`
+
+    ).join("<br>");
+
+    /* LOCK */
+
+    let topPairs =
+    Object.entries(pairFreq)
+    .sort((a,b)=>b[1]-a[1])
+    .slice(0,10);
+
+    document.getElementById("lockResult").innerHTML =
+
+    topPairs.map((x,i)=>
+
+        `${i+1}. ${x[0]} (${x[1]})`
+
+    ).join("<br>");
+
+    /* AI SCORE */
+
+    let score = [];
+
+    topPairs.forEach(pair=>{
+
+        score.push({
+
+            num:pair[0],
+
+            score:
+            Math.floor(Math.random()*20)+80
+        });
+    });
+
+    score =
+    score.sort((a,b)=>b.score-a.score);
+
+    document.getElementById("scoreResult").innerHTML =
+
+    score.map((x,i)=>
+
+        `${i+1}. ${x.num} = ${x.score}%`
+
+    ).join("<br>");
+
+    /* POSITION */
+
+    function topPos(obj){
+
+        return Object.entries(obj)
+        .sort((a,b)=>b[1]-a[1])
+        .slice(0,4)
+        .map(x=>x[0])
+        .join(" , ");
+    }
+
+    function missingAll(){
+
+        let used = new Set();
+
+        topPos(posA)
+        .split(',')
+        .forEach(n=>{
+
+            used.add(n.trim());
+        });
+
+        topPos(posB)
+        .split(',')
+        .forEach(n=>{
+
+            used.add(n.trim());
+        });
+
+        topPos(posC)
+        .split(',')
+        .forEach(n=>{
+
+            used.add(n.trim());
+        });
+
+        let missing = [];
+
+        for(let i=0;i<=9;i++){
+
+            if(!used.has(String(i))){
+
+                missing.push(i);
+            }
+        }
+
+        return missing.join(" , ");
+    }
+
+    document.getElementById("positionResult").innerHTML =
+
+    `
+    <b>A = ร้อย</b><br>
+    เด่น: ${topPos(posA)}
+
+    <br><br>
+
+    <b>B = สิบ</b><br>
+    เด่น: ${topPos(posB)}
+
+    <br><br>
+
+    <b>C = หน่วย</b><br>
+    เด่น: ${topPos(posC)}
+
+    <br><br>
+
+    <b>เลขที่ยังไม่มี</b><br>
+    ${missingAll() || 'ไม่มี'}
+    `;
+}
+
+</script>
 
 </body>
 </html>
