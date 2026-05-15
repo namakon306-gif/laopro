@@ -1,1 +1,495 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>THAI-LAO LOCK AI PRO</title>
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+
+*{box-sizing:border-box;}
+
+body{
+    margin:0;
+    padding:10px;
+    padding-bottom:80px;
+    background:#000;
+    color:#fff;
+    font-family:sans-serif;
+    -webkit-tap-highlight-color:transparent;
+}
+
+.page{display:none;}
+#page1{display:block;}
+
+.container{
+    max-width:700px;
+    margin:auto;
+    background:#111;
+    padding:12px;
+    border-radius:14px;
+    box-shadow:0 0 10px rgba(255,255,255,.05);
+}
+
+.top-box{
+    display:flex;
+    gap:8px;
+    margin-bottom:12px;
+}
+
+.box{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:5px;
+    padding:6px 8px;
+    border-radius:10px;
+}
+
+.box-a{border:2px solid #00bfff;background:#07151d;}
+.box-b{border:2px solid #ffd700;background:#1d1700;}
+.box-c{border:2px solid #00ff99;background:#071d14;}
+
+.box label{font-size:18px;font-weight:bold;}
+
+.box input{
+    width:100%;
+    height:34px;
+    border:none;
+    background:transparent;
+    outline:none;
+    color:#fff;
+    text-align:center;
+    font-size:18px;
+}
+
+.main-btn{
+    width:100%;
+    height:45px;
+    border:none;
+    border-radius:10px;
+    background:#222;
+    color:#fff;
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+.copy-btn{
+    width:100%;
+    height:35px;
+    border:none;
+    border-radius:8px;
+    background:#1565c0;
+    color:#fff;
+    margin-top:8px;
+}
+
+button{cursor:pointer;}
+button:active{transform:scale(.97);}
+
+.result-box{
+    border:1px solid #333;
+    border-radius:12px;
+    padding:10px;
+    margin-bottom:12px;
+    background:#111;
+}
+
+.result-title{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.result{
+    line-height:1.8;
+    word-break:break-word;
+}
+
+.count{
+    margin-top:8px;
+    font-weight:bold;
+    color:#aaa;
+}
+
+.match-red{
+    background:#ff3b30;
+    color:#fff;
+    padding:2px 5px;
+    border-radius:6px;
+}
+
+.search-box input,
+textarea{
+    width:100%;
+    border:2px solid #333;
+    border-radius:10px;
+    background:#000;
+    color:#fff;
+    padding:10px;
+    font-size:16px;
+}
+
+textarea{
+    height:180px;
+    resize:none;
+    margin-bottom:10px;
+}
+
+.search-box{margin-top:10px;}
+
+.bottom-menu{
+    position:fixed;
+    left:0;right:0;bottom:0;
+    height:60px;
+    background:#111;
+    display:flex;
+    border-top:1px solid #333;
+}
+
+.bottom-menu button{
+    flex:1;
+    border:none;
+    background:#111;
+    color:#fff;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.empty{color:#666;}
+
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div class="page" id="page1">
+<div class="container">
+
+<div class="top-box">
+<div class="box box-a"><label>A</label><input id="hundred" placeholder="00000"></div>
+<div class="box box-b"><label>B</label><input id="ten" placeholder="00000"></div>
+<div class="box box-c"><label>C</label><input id="unit" placeholder="00000"></div>
+</div>
+
+<button class="main-btn" onclick="generateAll()">แสดงผล</button>
+<button class="main-btn" style="background:#ff3b30" onclick="clearData()">ล้างข้อมูลทั้งหมด</button>
+
+<div class="result-box">
+<div class="result-title">พิเศษ (A1+C1)</div>
+<div class="result" id="resultAC"></div>
+<div class="count" id="countAC"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">พิเศษ (B1+C1)</div>
+<div class="result" id="resultSpecial"></div>
+<div class="count" id="countSpecial"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">3 หลัก (B2+C1)</div>
+<div class="result" id="result3"></div>
+<div class="count" id="count3"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">3 หลัก (A2+C1)</div>
+<div class="result" id="result3A"></div>
+<div class="count" id="count3A"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">4 หลัก (B2+A1+C1)</div>
+<div class="result" id="result4"></div>
+<div class="count" id="count4"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">4 หลัก (A2+B1+C1)</div>
+<div class="result" id="result4A"></div>
+<div class="count" id="count4A"></div>
+</div>
+
+<div class="search-box">
+<input id="searchInput" placeholder="ค้นหาเลขแบบไม่สนลำดับ" oninput="searchRealtime()">
+</div>
+
+</div>
+</div>
+
+<!-- PAGE 2 (FIXED + FULL WORKING) -->
+<div class="page" id="page2">
+<div class="container">
+
+<div class="result-box">
+<div class="result-title">🤖 วิเคราะห์ย้อนหลัง 10 งวด</div>
+<textarea id="historyInput"></textarea>
+<button class="main-btn" onclick="analyzeAI()">วิเคราะห์ AI</button>
+</div>
+
+<div class="result-box">
+<div class="result-title">🔥 เลขร้อน</div>
+<div class="result" id="hotResult"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">❄️ เลขเย็น</div>
+<div class="result" id="coldResult"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">🔒 คู่ล็อคเด่น 10 คู่</div>
+<div class="result" id="lockResult"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">🤖 AI SCORE</div>
+<div class="result" id="scoreResult"></div>
+</div>
+
+<div class="result-box">
+<div class="result-title">📊 วิเคราะห์ตำแหน่ง</div>
+<div class="result" id="positionResult"></div>
+</div>
+
+</div>
+</div>
+
+<!-- MENU -->
+<div class="bottom-menu">
+<button onclick="showPage(1)">🏠 หน้าแรก</button>
+<button onclick="showPage(2)">🤖 วิเคราะห์</button>
+</div>
+
+<script>
+
+/* PAGE */
+function showPage(page){
+    document.getElementById("page1").style.display="none";
+    document.getElementById("page2").style.display="none";
+    document.getElementById("page"+page).style.display="block";
+}
+
+/* GLOBAL */
+let rawSpecial=[],rawAC=[],raw3=[],raw3A=[],raw4=[],raw4A=[];
+
+/* TOOLS */
+function getNums(str){return str.replace(/[^0-9]/g,'').split('');}
+function uniqueArray(arr){return [...new Set(arr)];}
+
+function combine(arr,size){
+    let result=new Set();
+    function backtrack(p,u){
+        if(p.length===size){result.add(p.join(''));return;}
+        for(let i=0;i<arr.length;i++){
+            if(u[i]) continue;
+            u[i]=true;
+            p.push(arr[i]);
+            backtrack(p,u);
+            p.pop();
+            u[i]=false;
+        }
+    }
+    backtrack([],[]);
+    return [...result];
+}
+
+function uniqueNoOrder(arr){
+    let s=new Set(),r=[];
+    arr.forEach(n=>{
+        let k=n.split('').sort().join('');
+        if(!s.has(k)){s.add(k);r.push(n);}
+    });
+    return r;
+}
+
+function findDuplicateNoOrder(a1,a2){
+    let s=new Set(a1.map(x=>x.split('').sort().join('')));
+    return new Set(a2.filter(x=>s.has(x.split('').sort().join('')))
+        .map(x=>x.split('').sort().join('')));
+}
+
+/* MATCH 2D (A1+C1 vs B1+C1) */
+function findMatch2D(a1,a2){
+    let s=new Set(a1.map(x=>x.split('').sort().join('')));
+    return new Set(a2.filter(x=>s.has(x.split('').sort().join('')))
+        .map(x=>x.split('').sort().join('')));
+}
+
+/* COLOR */
+function colorNumber(num,type){
+    if(type==='special')return`<span style="color:#ffd700">${num[0]}</span><span style="color:#00ff99">${num[1]}</span>`;
+    if(type==='ac')return`<span style="color:#00bfff">${num[0]}</span><span style="color:#00ff99">${num[1]}</span>`;
+    if(type==='3b')return`<span style="color:#ffd700">${num.slice(0,2)}</span><span style="color:#00ff99">${num[2]}</span>`;
+    if(type==='3a')return`<span style="color:#00bfff">${num.slice(0,2)}</span><span style="color:#00ff99">${num[2]}</span>`;
+    if(type==='4b')return`<span style="color:#ffd700">${num.slice(0,2)}</span><span style="color:#00bfff">${num[2]}</span><span style="color:#00ff99">${num[3]}</span>`;
+    if(type==='4a')return`<span style="color:#00bfff">${num.slice(0,2)}</span><span style="color:#ffd700">${num[2]}</span><span style="color:#00ff99">${num[3]}</span>`;
+}
+
+/* RENDER */
+function render(id,data,type,matchSet=null){
+    if(!data.length){document.getElementById(id).innerHTML='<span class="empty">ไม่มีข้อมูล</span>';return;}
+    document.getElementById(id).innerHTML=data.map(n=>{
+        let k=n.split('').sort().join('');
+        let h=colorNumber(n,type);
+        return matchSet&&matchSet.has(k)?`<span class="match-red">${h}</span>`:h;
+    }).join(" , ");
+}
+
+/* GENERATE */
+function generateAll(){
+
+    let A=uniqueArray(getNums(document.getElementById("hundred").value));
+    let B=uniqueArray(getNums(document.getElementById("ten").value));
+    let C=uniqueArray(getNums(document.getElementById("unit").value));
+
+    let A2=uniqueNoOrder(combine(A,2));
+    let B2=uniqueNoOrder(combine(B,2));
+
+    rawAC=uniqueNoOrder(A.flatMap(a=>C.map(c=>a+c)));
+    rawSpecial=uniqueNoOrder(B.flatMap(b=>C.map(c=>b+c)));
+
+    raw3=uniqueNoOrder(B2.flatMap(x=>C.map(c=>x+c)));
+    raw3A=uniqueNoOrder(A2.flatMap(x=>C.map(c=>x+c)));
+
+    raw4=uniqueNoOrder(B2.flatMap(x=>A.flatMap(a=>C.map(c=>x+a+c))));
+    raw4A=uniqueNoOrder(A2.flatMap(x=>B.flatMap(b=>C.map(c=>x+b+c))));
+
+    let m3=findDuplicateNoOrder(raw3,raw3A);
+    let m4=findDuplicateNoOrder(raw4,raw4A);
+
+    let m2=findMatch2D(rawAC,rawSpecial);
+
+    render("resultAC",rawAC,"ac",m2);
+    render("resultSpecial",rawSpecial,"special",m2);
+    render("result3",raw3,"3b",m3);
+    render("result3A",raw3A,"3a",m3);
+    render("result4",raw4,"4b",m4);
+    render("result4A",raw4A,"4a",m4);
+}
+
+/* AI ANALYSIS (RESTORED FULL FUNCTION) */
+function analyzeAI(){
+
+    let text=document.getElementById("historyInput").value.replace(/[^0-9\n]/g,'');
+    let rows=text.split('\n').filter(v=>v.length>=3);
+
+    if(rows.length===0){alert("กรุณาป้อนข้อมูล");return;}
+
+    let digitCount={};
+
+    rows.forEach(n=>{
+        [...n].forEach(d=>{
+            digitCount[d]=(digitCount[d]||0)+1;
+        });
+    });
+
+    let sorted=Object.entries(digitCount).sort((a,b)=>b[1]-a[1]);
+
+    let hot=sorted.slice(0,5);
+    let cold=sorted.slice(-5);
+
+    document.getElementById("hotResult").innerHTML=hot.map(x=>`${x[0]} (${x[1]})`).join(" , ");
+    document.getElementById("coldResult").innerHTML=cold.map(x=>`${x[0]} (${x[1]})`).join(" , ");
+
+    let pair={};
+
+    rows.forEach(n=>{
+        let arr=[...new Set(n)];
+        for(let i=0;i<arr.length;i++){
+            for(let j=i+1;j<arr.length;j++){
+                let p=[arr[i],arr[j]].sort().join('');
+                pair[p]=(pair[p]||0)+1;
+            }
+        }
+    });
+
+    let topPairs=Object.entries(pair).sort((a,b)=>b[1]-a[1]).slice(0,10);
+
+    document.getElementById("lockResult").innerHTML=topPairs.map(x=>`${x[0]} (${x[1]})`).join(" , ");
+
+    document.getElementById("scoreResult").innerHTML=
+    sorted.map(x=>`${x[0]} = ${x[1]} คะแนน`).join("<br>");
+
+    let pos1={},pos2={},pos3={};
+
+    rows.forEach(n=>{
+        if(n[0])pos1[n[0]]=(pos1[n[0]]||0)+1;
+        if(n[1])pos2[n[1]]=(pos2[n[1]]||0)+1;
+        if(n[2])pos3[n[2]]=(pos3[n[2]]||0)+1;
+    });
+
+    function top4(o){
+        return Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,4).map(x=>x[0]);
+    }
+
+    let t1=top4(pos1),t2=top4(pos2),t3=top4(pos3);
+
+    let used=[...new Set([...t1,...t2,...t3])];
+
+    let all=['0','1','2','3','4','5','6','7','8','9'];
+
+    let missing=all.filter(x=>!used.includes(x));
+
+    document.getElementById("positionResult").innerHTML=
+    `ตำแหน่ง1: ${t1.join(",")}<br>
+     ตำแหน่ง2: ${t2.join(",")}<br>
+     ตำแหน่ง3: ${t3.join(",")}<br>
+     ไม่มี: ${missing.join(",")||"ไม่มี"}`;
+}
+
+/* SEARCH */
+function searchRealtime(){
+    let k=document.getElementById("searchInput").value.replace(/[^0-9]/g,'');
+    if(!k){generateAll();return;}
+    let f=a=>a.filter(n=>k.split('').every(x=>n.includes(x)));
+
+    let m2=findMatch2D(rawAC,rawSpecial);
+    let m3=findDuplicateNoOrder(raw3,raw3A);
+    let m4=findDuplicateNoOrder(raw4,raw4A);
+
+    render("resultAC",f(rawAC),"ac",m2);
+    render("resultSpecial",f(rawSpecial),"special",m2);
+    render("result3",f(raw3),"3b",m3);
+    render("result3A",f(raw3A),"3a",m3);
+    render("result4",f(raw4),"4b",m4);
+    render("result4A",f(raw4A),"4a",m4);
+}
+
+/* CLEAR */
+function clearData(){
+    if(confirm("ล้างข้อมูลทั้งหมด ?")){
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+/* AUTO SAVE */
+["hundred","ten","unit","historyInput","searchInput"].forEach(id=>{
+    let el=document.getElementById(id);
+    if(!el) return;
+    el.value=localStorage.getItem(id)||"";
+    el.addEventListener("input",()=>localStorage.setItem(id,el.value));
+});
+
+if('serviceWorker' in navigator){
+    window.addEventListener('load',()=>{
+        navigator.serviceWorker.register('./service-worker.js');
+    });
+}
+
+</script>
+
+</body>
+</html>
